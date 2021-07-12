@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BWModLoader;
 using UnityEngine;
 
-namespace Duels
+namespace BoardingBloodbath
 {
     [Mod]
     public class ModeHandler : MonoBehaviour
@@ -19,7 +19,7 @@ namespace Duels
                 // To User only
                 if (isForced)
                 {
-                    DuelsGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                    MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                     {
                     1,
                     1,
@@ -32,7 +32,7 @@ namespace Duels
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
-                        "Switching to Duels mode..."
+                        "Switching to BoardingBloodbath mode..."
                     });
                     voteSucceded = true;
                 }
@@ -42,7 +42,7 @@ namespace Duels
                 usersVoted.Add(pName);
 
                 // To User only
-                DuelsGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                 {
                     1,
                     1,
@@ -51,14 +51,14 @@ namespace Duels
                 });
 
                 // To all users
-                DuelsGameMode.Instance.wno.îëæêéïåðæìå("broadcastChat", óëððîêðëóêó.îéäåéçèïïñí, new object[]
+                MainGameMode.Instance.wno.îëæêéïåðæìå("broadcastChat", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                 {
                     1,
                     1,
                     "game",
                     string.Concat(new string[]
                     {
-                        "User has voted for 'Duels' (",
+                        "User has voted for 'BoardingBloodbath' (",
                         usersVoted.Count.ToString(),
                         "/",
                         Math.Ceiling((double)GameMode.Instance.Players.Count / 2.0).ToString(),
@@ -71,7 +71,7 @@ namespace Duels
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
-                        "Switching to Duels mode..."
+                        "Switching to BoardingBloodbath mode..."
                     });
                     voteSucceded = true;
                 }

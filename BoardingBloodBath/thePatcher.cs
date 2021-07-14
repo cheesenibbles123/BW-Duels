@@ -112,6 +112,12 @@ namespace BoardingBloodbath
 				}
 				return true;
 			}
+
+			if (text == "!vote")
+            {
+				ModeHandler.vote(sender, info.éäñåíéíìééä, false);
+				return false;
+			}
 			return true;
 		}
 	}

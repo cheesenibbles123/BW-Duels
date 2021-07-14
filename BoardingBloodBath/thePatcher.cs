@@ -143,4 +143,14 @@ namespace BoardingBloodbath
 			return !MainGameMode.Instance.started;
 		}
 	}
+
+	[HarmonyPatch(typeof(BotPlayer), "Init")]
+	static class botPatch
+	{
+		private static bool Prefix(BotPlayer __instance)
+		{
+			return !MainGameMode.Instance.started;
+		}
+	}
+
 }

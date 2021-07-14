@@ -132,19 +132,6 @@ namespace BoardingBloodbath
             }
         }
 
-        void setSpawnTimers()
-        {
-            GameMode.setSpawnTimes(new float[]
-            {
-                respawnTimer,
-                respawnTimer,
-                respawnTimer,
-                respawnTimer,
-                respawnTimer,
-                respawnTimer
-            });
-        }
-
         private IEnumerator gameModeStart()
         {
             Log.log("Started [BoardingBloodbath] mode");
@@ -156,7 +143,6 @@ namespace BoardingBloodbath
                 "Loading BoardingBloodbath mode..."
             });
             setTickets(pirateTickets, navyTickets);
-            //setSpawnTimers();
             Log.log("Waiting 20sec");
             yield return new WaitForSeconds(20f);
             Log.log("Passed 20sec");

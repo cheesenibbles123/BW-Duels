@@ -24,7 +24,7 @@ namespace BoardingBloodbath
                     1,
                     1,
                     "game",
-                    "You have already voted."
+                    "You have already forced."
                     });
                 }
                 else
@@ -71,7 +71,7 @@ namespace BoardingBloodbath
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
-                        "Switching to BoardingBloodbath mode..."
+                        "Switching to Boarding Bloodbath mode..."
                     });
                     voteSucceded = true;
                 }

@@ -48,6 +48,38 @@ namespace BoardingBloodbath
 		}
 	}
 
+	[HarmonyPatch(typeof(PlayerHealth), "die")]
+	internal static class PlayerDeathPatch
+	{
+		// Token: 0x06000002 RID: 2 RVA: 0x00002070 File Offset: 0x00000270
+		private static void Postfix(PlayerHealth __instance, Vector3 äåòéðññåîòì, int çññíïïíòóêê, bool îðòíæíæïðåê, bool ñïêêðêæíóòê, ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
+		{
+			if (MainGameMode.Instance.started)
+            {
+				PlayerInfo plr = __instance.GetComponent<PlayerInfo>();
+				if (plr != null)
+                {
+					if (GameMode.Instance.teamFactions[plr.team] == "pirates")
+					{
+						GameMode.Instance.pirateTickets--;
+						if (GameMode.Instance.pirateTickets % MainGameMode.Instance.pirateSteps == 0 || GameMode.Instance.pirateTickets < 10)
+                        {
+							MainGameMode.updateTickets();
+                        }
+					}
+                    else{
+						GameMode.Instance.navyTickets--;
+						if (GameMode.Instance.navyTickets % MainGameMode.Instance.navySteps == 0 || GameMode.Instance.navyTickets < 10)
+						{
+							MainGameMode.updateTickets();
+						}
+					}
+                }
+
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(Chat), "sendChat")]
 	static class ChatPatch
 	{
@@ -63,7 +95,7 @@ namespace BoardingBloodbath
 			bool isAdmin = éæñêääóîîèò.ðïîñðçòäêëæ(steamID);
 			if (isAdmin)
 			{
-				if (text == "!xyz")
+				if (text.StartsWith("!xyz"))
 				{
 					Log.log("xyz command used");
 					MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
@@ -98,64 +130,227 @@ namespace BoardingBloodbath
 					});
 					return false;
 				}
-				else if (text == "!force")
+				else if (text.StartsWith("!force"))
 				{
 					Log.log("force command used");
 					ModeHandler.vote(sender, info.éäñåíéíìééä, true);
 					return false;
 				}
-				else if (text == "!reload")
+				else if (text.StartsWith("!reload"))
                 {
 					Log.log("Reloading config");
 					MainGameMode.Instance.loadSettings();
 					return false;
+				}else if (text.StartsWith("!location"))
+                {
+					string[] txt = text.Split(' ');
+					if (txt.Length == 2)
+                    {
+						Vector3 pos;
+						Vector3 rot;
+						switch (txt[1])
+                        {
+							case "0":
+								pos = GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position; // Distance from each other, height, distance from center
+								rot = GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+							case "1":
+								pos = GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position;
+								rot = GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+							case "2":
+								pos = GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position;
+								rot = GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+							case "4":
+								pos = GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position;
+								rot = GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+							case "5":
+								pos = GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position;
+								rot = GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+							case "6":
+								pos = GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position;
+								rot = GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles;
+								break;
+                            default:
+								pos = new Vector3(0, 0, 0);
+								rot = new Vector3(0, 0, 0);
+								break;
+                        }
+						MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+						{
+							1,
+							1,
+							"game",
+							string.Concat(new object[]
+							{
+								"X: ",
+								pos.x,
+								" Y: ",
+								pos.y,
+								" Z: ",
+								pos.z
+							})
+						});
+						MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+						{
+							1,
+							1,
+							"game",
+							string.Concat(new object[]
+							{
+								"rX: ",
+								rot.x,
+								" rY: ",
+								rot.y,
+								" rZ: ",
+								rot.z
+							})
+						});
+						return false;
+					}
+                }else if (text.StartsWith("!tp"))
+                {
+					string[] txt = text.Split(' ');
+					
+					Vector3 newPos = new Vector3(float.Parse(txt[2]), float.Parse(txt[3]), float.Parse(txt[4]));
+					switch (txt[1])
+					{
+						case "0":
+							GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos; // Distance from each other, height, distance from center
+							break;
+						case "1":
+							GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos;
+							break;
+						case "2":
+							GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos;
+							break;
+						case "4":
+							GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos;
+							break;
+						case "5":
+							GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos;
+							break;
+						case "6":
+							GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = newPos;
+							break;
+					}
+					Debug.Log($"Set team {txt[1]} to location {txt[2]}:{txt[3]}:{txt[4]}");
 				}
-				return true;
+				else if (text.StartsWith("!rot"))
+				{
+					string[] txt = text.Split(' ');
+
+					Vector3 newRot = new Vector3(float.Parse(txt[2]), float.Parse(txt[3]), float.Parse(txt[4]));
+					switch (txt[1])
+					{
+						case "0":
+							GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot; // Distance from each other, height, distance from center
+							break;
+						case "1":
+							GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot;
+							break;
+						case "2":
+							GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot;
+							break;
+						case "4":
+							GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot;
+							break;
+						case "5":
+							GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot;
+							break;
+						case "6":
+							GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = newRot;
+							break;
+					}
+					Debug.Log($"Set team {txt[1]} to rot {txt[2]}:{txt[3]}:{txt[4]}");
+				}
 			}
 
-			if (text == "!vote")
+			if (text.StartsWith("!vote"))
             {
+				Log.log("Got vote");
 				ModeHandler.vote(sender, info.éäñåíéíìééä, false);
 				return false;
 			}
 			return true;
 		}
 	}
-	/*
+
 	[HarmonyPatch(typeof(WinConditions), "ðñëåîçåêêðæ")]
 	static class WinConditionPatch
 	{
 		private static bool Prefix(ref bool __result)
 		{
-			return !MainGameMode.Instance.started;
+			return true;
+			if (MainGameMode.Instance.started)
+            {
+				if (GameMode.Instance.navyTickets < 0)
+				{
+					GameMode.Instance.handler.åñîïòíæêêåî.îëæêéïåðæìå("win", óëððîêðëóêó.îéäåéçèïïñí, new object[]
+					{
+					"Pirates",
+					0
+					});
+					__result = true;
+
+				}
+                else if (GameMode.Instance.pirateTickets < 0)
+                {
+					GameMode.Instance.handler.åñîïòíæêêåî.îëæêéïåðæìå("win", óëððîêðëóêó.îéäåéçèïïñí, new object[]
+					{
+					"Navy",
+					0
+					});
+					__result = true;
+                }
+                else
+                {
+					__result = false;
+                }
+				return false;
+			}
+            else
+            {
+				return true;
+            }
 		}
 	}
-	*/
 
-	[HarmonyPatch(typeof(Cannonball), "ðñëåîçåêêðæ")]
-	static class cannonballPatch
+	[HarmonyPatch(typeof(CannonUse), "äæäíêïæììðë")]
+	static class cannonPatch
     {
-		private static bool Prefix()
+		private static bool Prefix(string ëìåçäìääîéî, bool êóòæñåèêåéì)
         {
 			return !MainGameMode.Instance.started;
         }
     }
 
-	[HarmonyPatch(typeof(SwivelUse), "onThisObjectUsed")]
+	[HarmonyPatch(typeof(SwivelUse), "fire")]
 	static class swivelPatch
 	{
-		private static bool Prefix()
+		private static bool Prefix(ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
 			return !MainGameMode.Instance.started;
 		}
 	}
 
-	[HarmonyPatch(typeof(BotPlayer), "Init")]
+	[HarmonyPatch(typeof(BotHandler), "Update")]
 	static class botPatch
 	{
-		private static bool Prefix(BotPlayer __instance)
+		private static bool Prefix(BotHandler __instance)
 		{
-			return !MainGameMode.Instance.started;
+			if (MainGameMode.Instance.started)
+			{
+				for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
+				{
+					__instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+				}
+				return false;
+			}
+			return true;
 		}
 	}
 

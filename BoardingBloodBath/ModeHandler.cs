@@ -17,24 +17,34 @@ namespace BoardingBloodbath
             if (usersVoted.Contains(pName))
             {
                 // To User only
-                if (isForced)
+                if (isForced && voteSucceded)
                 {
                     MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                     {
-                    1,
-                    1,
-                    "game",
-                    "You have already forced."
+                        1,
+                        1,
+                        "game",
+                        "The gamemode has already won the vote!"
                     });
                 }
-                else
+                else if (isForced)
                 {
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
-                        "Switching to BoardingBloodbath mode..."
+                        "Switching to Boarding Bloodbath mode next round..."
                     });
                     voteSucceded = true;
+                }
+                else
+                {
+                    MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                    {
+                        1,
+                        1, 
+                        "game",
+                        "You have already voted!"
+                    });
                 }
             }
             else
@@ -61,17 +71,17 @@ namespace BoardingBloodbath
                         "User has voted for 'BoardingBloodbath' (",
                         usersVoted.Count.ToString(),
                         "/",
-                        Math.Ceiling((double)GameMode.Instance.Players.Count / 2.0).ToString(),
+                        Math.Ceiling(GameMode.Instance.Players.Count / 2.0).ToString(),
                         ")"
                     })
                 });
 
-                if ((double)usersVoted.Count >= Math.Ceiling((double)GameMode.Instance.Players.Count / 2.0) || isForced)
+                if ((usersVoted.Count >= Math.Ceiling(GameMode.Instance.Players.Count / 2.0) || isForced) && !voteSucceded)
                 {
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
-                        "Switching to Boarding Bloodbath mode..."
+                        "Switching to Boarding Bloodbath mode next round..."
                     });
                     voteSucceded = true;
                 }

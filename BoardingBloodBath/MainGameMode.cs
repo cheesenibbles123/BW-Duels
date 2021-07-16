@@ -16,8 +16,10 @@ namespace BoardingBloodbath
         public static int GamemodeID;
         public bool Loaded = false;
         public bool started = false;
-        int navyTickets = 160;
-        int pirateTickets = 160;
+        int navyTickets = 200;
+        public int navySteps = 20;
+        int pirateTickets = 200;
+        public int pirateSteps = 20;
         string configFile = "BoardingBloodbath.cfg";
         float respawnTimer = 15f;
 
@@ -117,15 +119,22 @@ namespace BoardingBloodbath
                     }
                 }
             }
+            navySteps = (int)(100 % ((10 / navyTickets) * 100));
+            pirateSteps = (int)(100 % ((10 / pirateTickets) * 100));
         }
 
         void setTickets(int pirate, int navy)
         {
             GameMode.Instance.pirateTickets = pirate;
             GameMode.Instance.navyTickets = navy;
+            updateTickets();
+        }
+
+        public static void updateTickets()
+        {
             for (int i = 0; i < GameMode.Instance.teamCount; i++)
             {
-                wno.îëæêéïåðæìå("setTickets", óëððîêðëóêó.îéäåéçèïïñí, new object[]{
+                UI.Instance.matchHUD.GetComponent<WakeNetObject>().îëæêéïåðæìå("setTickets", óëððîêðëóêó.îéäåéçèïïñí, new object[]{
                     i,
                     GameMode.Instance.getTickets(i)
                 }); ;
@@ -135,6 +144,7 @@ namespace BoardingBloodbath
         private IEnumerator gameModeStart()
         {
             Log.log("Started [BoardingBloodbath] mode");
+            GameMode.Instance.useTickets = true;
             wno.îëæêéïåðæìå("broadcastChat", óëððîêðëóêó.îéäåéçèïïñí, new object[]
             {
                 1,
@@ -144,6 +154,10 @@ namespace BoardingBloodbath
             });
             setTickets(pirateTickets, navyTickets);
             Log.log("Waiting 20sec");
+
+            ModeHandler.usersVoted.Clear();
+            ModeHandler.voteSucceded = false;
+
             yield return new WaitForSeconds(20f);
             Log.log("Passed 20sec");
 
@@ -164,9 +178,36 @@ namespace BoardingBloodbath
 
             try
             {
-                GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-49f, 8f, -12f); // Distance from each other, height, distance from center
-                GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-36f, 0f, -22f);
-                GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-18f, 8f, -12f);
+                GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-80f, 4.5f, -60f); // Distance from each other, height, distance from center
+                GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+
+                GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-40f, 9f, -60f);
+                GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+
+                GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(0f, 4.5f, -60f);
+                GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 0, 0f);
+
+                GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(40f, 4.5f, -60f);
+                GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+
+                GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(80f, 9f, -60f);
+                GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+
+                GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(120f, 4.5f, -60f);
+                GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            }
+            catch (Exception e)
+            {
+                Log.log(e.Message);
+            }
+            Log.log("Moved ships to init");
+
+            try
+            {
+                GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-37f, 4.5f, -10f); // Distance from each other, height, distance from center
+                GameMode.Instance.teamParents[0].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, -10f, 0f);
+                GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-16f, 4.5f, 13f);
+                GameMode.Instance.teamParents[2].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, -10f, 0f);
             }
             catch (Exception e)
             {
@@ -176,16 +217,29 @@ namespace BoardingBloodbath
 
             try
             {
-                GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-48f, 8f, 12f);
-                GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-35f, 0f, 22f);
-                GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-17f, 8f, 12f);
+                GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-46.5f, 4.5f, 23f);
+                GameMode.Instance.teamParents[4].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 165f, 0f);
+                GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-25f, 4.5f, 44f);
+                GameMode.Instance.teamParents[6].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 160f, 0f);
             }
             catch (Exception e)
             {
                 Log.log(e.Message);
             }
             Log.log("Moved navy ships");
-            
+
+            try {
+                GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+                GameMode.Instance.teamParents[1].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-26f, 9f, 4f);
+                GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.eulerAngles = new Vector3(0f, 180f, 0f);
+                GameMode.Instance.teamParents[5].GetComponent<ShipHealth>().ññçäîèäíñðó.transform.position = new Vector3(-36f, 9f, 35f);
+            }
+            catch (Exception e)
+            {
+                Log.log(e.Message);
+            }
+            Log.log("Setup big ships");
+
             yield return new WaitUntil(() => GameMode.Instance.votingOver);
             started = true;
             Loaded = true;

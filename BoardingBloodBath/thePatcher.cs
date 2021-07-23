@@ -1,8 +1,10 @@
 ﻿using Harmony;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BoardingBloodbath
 {
+	
 	[HarmonyPatch(typeof(CaptainCommandWheel), "setCommand")]
 	static class AbandonPatch
 	{
@@ -141,7 +143,8 @@ namespace BoardingBloodbath
 					Log.log("Reloading config");
 					MainGameMode.Instance.loadSettings();
 					return false;
-				}else if (text.StartsWith("!location"))
+				}
+				else if (text.StartsWith("!location"))
                 {
 					string[] txt = text.Split(' ');
 					if (txt.Length == 2)
@@ -338,17 +341,26 @@ namespace BoardingBloodbath
 	}
 
 	[HarmonyPatch(typeof(BotHandler), "Update")]
-	static class botPatch
+	static class botUpdatePatch
 	{
 		private static bool Prefix(BotHandler __instance)
 		{
 			if (MainGameMode.Instance.started)
 			{
-				for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
-				{
-					__instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
-				}
 				return false;
+			}
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(BotHandler), "Start")]
+	static class botStartPatch
+	{
+		private static bool Prefix(BotHandler __instance)
+		{
+			if (MainGameMode.Instance.started)
+			{
+				MainGameMode.Instance.StartCoroutine(MainGameMode.Instance.bothandlerUpdateLoop(__instance));
 			}
 			return true;
 		}

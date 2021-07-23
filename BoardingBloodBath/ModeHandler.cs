@@ -72,7 +72,8 @@ namespace BoardingBloodbath
                         usersVoted.Count.ToString(),
                         "/",
                         Math.Ceiling(GameMode.Instance.Players.Count / 2.0).ToString(),
-                        ")"
+                        ")",
+                        " using '!vote' in chat!"
                     })
                 });
 

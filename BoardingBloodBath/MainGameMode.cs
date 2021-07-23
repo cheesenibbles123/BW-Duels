@@ -246,5 +246,18 @@ namespace BoardingBloodbath
             Log.log("Waiting complete!");
             yield break;
         }
+
+        public IEnumerator bothandlerUpdateLoop(BotHandler __instance)
+        {
+            yield return new WaitForSeconds(0.1f);
+            for (;;)
+            {
+                for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
+                {
+                    __instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+                }
+                yield return new WaitForSeconds(5f);
+            }
+        }
     }
 }

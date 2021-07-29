@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BoardingBloodbath
 {
     [Mod]
-    public class ModeHandler : MonoBehaviour
+    public class BoardingBloodbathModeHandler : MonoBehaviour
     {
 
         public static List<string> usersVoted = new List<string>();
@@ -19,7 +19,7 @@ namespace BoardingBloodbath
                 // To User only
                 if (isForced && voteSucceded)
                 {
-                    MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                    BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                     {
                         1,
                         1,
@@ -38,7 +38,7 @@ namespace BoardingBloodbath
                 }
                 else
                 {
-                    MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                    BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                     {
                         1,
                         1, 
@@ -52,7 +52,7 @@ namespace BoardingBloodbath
                 usersVoted.Add(pName);
 
                 // To User only
-                MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                 {
                     1,
                     1,
@@ -61,7 +61,7 @@ namespace BoardingBloodbath
                 });
 
                 // To all users
-                MainGameMode.Instance.wno.îëæêéïåðæìå("broadcastChat", óëððîêðëóêó.îéäåéçèïïñí, new object[]
+                BoardingBloodbathGameMode.Instance.wno.îëæêéïåðæìå("broadcastChat", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                 {
                     1,
                     1,

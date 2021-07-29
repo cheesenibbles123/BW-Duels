@@ -11,7 +11,7 @@ namespace BoardingBloodbath
 		// Token: 0x06000005 RID: 5 RVA: 0x000020F0 File Offset: 0x000002F0
 		private static bool Prefix(int íóóïíðóòêêè, int óîèòèðîðçîì, int íäêìòïçìóòä, int óêóêíðåîóêí, ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
-			return !MainGameMode.Instance.Loaded;
+			return !BoardingBloodbathGameMode.Instance.Loaded;
 		}
 	}
 
@@ -21,7 +21,7 @@ namespace BoardingBloodbath
 		// Token: 0x06000004 RID: 4 RVA: 0x000020C8 File Offset: 0x000002C8
 		private static bool Prefix(int îîçêèîëìîæê, ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
-			return !MainGameMode.Instance.Loaded;
+			return !BoardingBloodbathGameMode.Instance.Loaded;
 		}
 	}
 
@@ -31,8 +31,8 @@ namespace BoardingBloodbath
 		// Token: 0x06000003 RID: 3 RVA: 0x000020AC File Offset: 0x000002AC
 		private static void Postfix(string ëëäíêðäóæîó, int íïïìîóðíçëæ, ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
-			MainGameMode.Instance.Loaded = false;
-			MainGameMode.Instance.started = false;
+			BoardingBloodbathGameMode.Instance.Loaded = false;
+			BoardingBloodbathGameMode.Instance.started = false;
 		}
 	}
 
@@ -43,7 +43,7 @@ namespace BoardingBloodbath
 		private static void Postfix(ref int __result)
 		{
 			Log.logger.Log("Did gm " + __result.ToString());
-			if (ModeHandler.voteSucceded)
+			if (BoardingBloodbathModeHandler.voteSucceded)
 			{
 				__result = 1;
 			}
@@ -56,7 +56,7 @@ namespace BoardingBloodbath
 		// Token: 0x06000002 RID: 2 RVA: 0x00002070 File Offset: 0x00000270
 		private static void Postfix(PlayerHealth __instance, Vector3 äåòéðññåîòì, int çññíïïíòóêê, bool îðòíæíæïðåê, bool ñïêêðêæíóòê, ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
-			if (MainGameMode.Instance.started)
+			if (BoardingBloodbathGameMode.Instance.started)
             {
 				PlayerInfo plr = __instance.GetComponent<PlayerInfo>();
 				if (plr != null)
@@ -64,16 +64,16 @@ namespace BoardingBloodbath
 					if (GameMode.Instance.teamFactions[plr.team] == "pirates")
 					{
 						GameMode.Instance.pirateTickets--;
-						if (GameMode.Instance.pirateTickets % MainGameMode.Instance.pirateSteps == 0 || GameMode.Instance.pirateTickets < 10)
+						if (GameMode.Instance.pirateTickets % BoardingBloodbathGameMode.Instance.pirateSteps == 0 || GameMode.Instance.pirateTickets < 10)
                         {
-							MainGameMode.updateTickets();
+							BoardingBloodbathGameMode.updateTickets();
                         }
 					}
                     else{
 						GameMode.Instance.navyTickets--;
-						if (GameMode.Instance.navyTickets % MainGameMode.Instance.navySteps == 0 || GameMode.Instance.navyTickets < 10)
+						if (GameMode.Instance.navyTickets % BoardingBloodbathGameMode.Instance.navySteps == 0 || GameMode.Instance.navyTickets < 10)
 						{
-							MainGameMode.updateTickets();
+							BoardingBloodbathGameMode.updateTickets();
 						}
 					}
                 }
@@ -100,7 +100,7 @@ namespace BoardingBloodbath
 				if (text.StartsWith("!xyz"))
 				{
 					Log.log("xyz command used");
-					MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+					BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
 					{
 						1,
 						1,
@@ -115,7 +115,7 @@ namespace BoardingBloodbath
 							playerBySocket.transform.position.z
 						})
 					});
-					MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+					BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
 					{
 						1,
 						1,
@@ -132,16 +132,16 @@ namespace BoardingBloodbath
 					});
 					return false;
 				}
-				else if (text.StartsWith("!force"))
+				else if (text.StartsWith("!force BB"))
 				{
 					Log.log("force command used");
-					ModeHandler.vote(sender, info.éäñåíéíìééä, true);
+					BoardingBloodbathModeHandler.vote(sender, info.éäñåíéíìééä, true);
 					return false;
 				}
-				else if (text.StartsWith("!reload"))
+				else if (text.StartsWith("!reload BB"))
                 {
 					Log.log("Reloading config");
-					MainGameMode.Instance.loadSettings();
+					BoardingBloodbathGameMode.Instance.loadSettings();
 					return false;
 				}
 				else if (text.StartsWith("!location"))
@@ -182,7 +182,7 @@ namespace BoardingBloodbath
 								rot = new Vector3(0, 0, 0);
 								break;
                         }
-						MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+						BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
 						{
 							1,
 							1,
@@ -197,7 +197,7 @@ namespace BoardingBloodbath
 								pos.z
 							})
 						});
-						MainGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
+						BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", info.éäñåíéíìééä, new object[]
 						{
 							1,
 							1,
@@ -272,10 +272,10 @@ namespace BoardingBloodbath
 				}
 			}
 
-			if (text.StartsWith("!vote"))
+			if (text.StartsWith("!vote BB"))
             {
 				Log.log("Got vote");
-				ModeHandler.vote(sender, info.éäñåíéíìééä, false);
+				BoardingBloodbathModeHandler.vote(sender, info.éäñåíéíìééä, false);
 				return false;
 			}
 			return true;
@@ -288,7 +288,7 @@ namespace BoardingBloodbath
 		private static bool Prefix(ref bool __result)
 		{
 			return true;
-			if (MainGameMode.Instance.started)
+			if (BoardingBloodbathGameMode.Instance.started)
             {
 				if (GameMode.Instance.navyTickets < 0)
 				{
@@ -327,7 +327,7 @@ namespace BoardingBloodbath
     {
 		private static bool Prefix(string ëìåçäìääîéî, bool êóòæñåèêåéì)
         {
-			return !MainGameMode.Instance.started;
+			return !BoardingBloodbathGameMode.Instance.started;
         }
     }
 
@@ -336,7 +336,7 @@ namespace BoardingBloodbath
 	{
 		private static bool Prefix(ïçîìäîóäìïæ.åéðñðçîîïêç äíìíëðñïñéè)
 		{
-			return !MainGameMode.Instance.started;
+			return !BoardingBloodbathGameMode.Instance.started;
 		}
 	}
 
@@ -345,7 +345,7 @@ namespace BoardingBloodbath
 	{
 		private static bool Prefix(BotHandler __instance)
 		{
-			if (MainGameMode.Instance.started)
+			if (BoardingBloodbathGameMode.Instance.started)
 			{
 				return false;
 			}
@@ -358,9 +358,9 @@ namespace BoardingBloodbath
 	{
 		private static bool Prefix(BotHandler __instance)
 		{
-			if (MainGameMode.Instance.started)
+			if (BoardingBloodbathGameMode.Instance.started)
 			{
-				MainGameMode.Instance.StartCoroutine(MainGameMode.Instance.bothandlerUpdateLoop(__instance));
+				BoardingBloodbathGameMode.Instance.StartCoroutine(BoardingBloodbathGameMode.Instance.bothandlerUpdateLoop(__instance));
 			}
 			return true;
 		}

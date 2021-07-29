@@ -9,9 +9,9 @@ using System.IO;
 namespace BoardingBloodbath
 {
     [Mod]
-    public class MainGameMode : MonoBehaviour
+    public class BoardingBloodbathGameMode : MonoBehaviour
     {
-        public static MainGameMode Instance;
+        public static BoardingBloodbathGameMode Instance;
         public WakeNetObject wno;
         public static int GamemodeID;
         public bool Loaded = false;
@@ -64,11 +64,11 @@ namespace BoardingBloodbath
         public void reset()
         {
             started = false;
-            if (ModeHandler.voteSucceded)
+            if (BoardingBloodbathModeHandler.voteSucceded)
             {
-                ModeHandler.usersVoted.Clear();
+                BoardingBloodbathModeHandler.usersVoted.Clear();
                 Loaded = true;
-                ModeHandler.voteSucceded = false;
+                BoardingBloodbathModeHandler.voteSucceded = false;
                 Log.log("Starting coroutine");
                 Instance.StartCoroutine(Instance.gameModeStart());
             }
@@ -155,8 +155,8 @@ namespace BoardingBloodbath
             setTickets(pirateTickets, navyTickets);
             Log.log("Waiting 20sec");
 
-            ModeHandler.usersVoted.Clear();
-            ModeHandler.voteSucceded = false;
+            BoardingBloodbathModeHandler.usersVoted.Clear();
+            BoardingBloodbathModeHandler.voteSucceded = false;
 
             yield return new WaitForSeconds(20f);
             Log.log("Passed 20sec");

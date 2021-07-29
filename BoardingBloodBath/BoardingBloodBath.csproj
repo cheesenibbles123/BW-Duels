@@ -54,9 +54,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainGameMode.cs" />
+    <Compile Include="BoardingBloodbathGameMode.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="ModeHandler.cs" />
+    <Compile Include="BoardingBloodbathModeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShipsHandler.cs" />
     <Compile Include="thePatcher.cs" />

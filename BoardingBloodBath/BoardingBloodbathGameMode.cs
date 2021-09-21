@@ -254,7 +254,10 @@ namespace BoardingBloodbath
             {
                 for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
                 {
-                    __instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+                    if (__instance.êóæìíîìñäîí[i])
+                    {
+                        __instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+                    }
                 }
                 yield return new WaitForSeconds(5f);
             }

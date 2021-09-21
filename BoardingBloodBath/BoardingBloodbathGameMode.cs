@@ -119,8 +119,8 @@ namespace BoardingBloodbath
                     }
                 }
             }
-            navySteps = (int)(100 % ((10 / navyTickets) * 100));
-            pirateSteps = (int)(100 % ((10 / pirateTickets) * 100));
+            navySteps = (int)(100 % ((10f / navyTickets) * 100));
+            pirateSteps = (int)(100 % ((10f / pirateTickets) * 100));
         }
 
         void setTickets(int pirate, int navy)

@@ -21,7 +21,7 @@ namespace BoardingBloodbath
             }
             else
             {
-                ShipsHandler.getconstruction().ships[(int)ship].ëéíìðñîòçïï[team] = true;
+                getconstruction().ships[(int)ship].ëéíìðñîòçïï[team] = true;
                 for (int i = 0; i < GameMode.Instance.teamParents.Length; i++)
                 {
                     GameMode.Instance.teamIsShip[i] = GameMode.Instance.isShip(i);
@@ -56,7 +56,16 @@ namespace BoardingBloodbath
         {
             Hoy,
             Schooner,
-            Galleon
+            Galleon,
+            Cruiser,
+            Junk,
+            Gunboat,
+            Cutter,
+            Brig,
+            Bombketch,
+            Carrack,
+            Xebec,
+            Bombvessel
         }
     }
 }

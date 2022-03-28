@@ -5,6 +5,8 @@ using BWModLoader;
 using Harmony;
 using System.Reflection;
 using System.IO;
+using BoardingBloodBath;
+using System.Collections.Generic;
 
 namespace BoardingBloodbath
 {
@@ -13,6 +15,7 @@ namespace BoardingBloodbath
     {
         public static BoardingBloodbathGameMode Instance;
         public WakeNetObject wno;
+        public List<Preset> presets = new List<Preset>();
         public static int GamemodeID;
         public bool Loaded = false;
         public bool started = false;
@@ -22,6 +25,7 @@ namespace BoardingBloodbath
         public int pirateSteps = 20;
         string configFile = "BoardingBloodbath.cfg";
         float respawnTimer = 15f;
+        public int nextPreset = 0;
 
         private void Awake()
         {
@@ -43,6 +47,8 @@ namespace BoardingBloodbath
                 Log.log("Made harmony Instance");
                 harmonyInstance.PatchAll();
                 Log.log("Patched all");
+                setupPresets();
+                Log.log("Setup presets");
             }
             catch (Exception e)
             {
@@ -141,6 +147,59 @@ namespace BoardingBloodbath
             }
         }
 
+        public static void selectNextPreset()
+        {
+            Instance.nextPreset = UnityEngine.Random.Range(0, Instance.presets.Count - 1);
+        }
+
+        void setupPresets()
+        {
+            presets.Add(new Preset(
+                ShipsHandler.Ships.Hoy,
+                ShipsHandler.Ships.Galleon,
+                ShipsHandler.Ships.Hoy,
+                ShipsHandler.Ships.Hoy,
+                ShipsHandler.Ships.Galleon,
+                ShipsHandler.Ships.Hoy
+            ));
+
+            presets.Add(new Preset(
+                ShipsHandler.Ships.Cutter,
+                ShipsHandler.Ships.Brig,
+                ShipsHandler.Ships.Cutter,
+                ShipsHandler.Ships.Cutter,
+                ShipsHandler.Ships.Brig,
+                ShipsHandler.Ships.Cutter
+            ));
+
+            presets.Add(new Preset(
+                ShipsHandler.Ships.Junk,
+                ShipsHandler.Ships.Xebec,
+                ShipsHandler.Ships.Junk,
+                ShipsHandler.Ships.Junk,
+                ShipsHandler.Ships.Xebec,
+                ShipsHandler.Ships.Junk
+            ));
+
+            presets.Add(new Preset(
+                ShipsHandler.Ships.Bombketch,
+                ShipsHandler.Ships.Bombvessel,
+                ShipsHandler.Ships.Bombketch,
+                ShipsHandler.Ships.Bombketch,
+                ShipsHandler.Ships.Bombvessel,
+                ShipsHandler.Ships.Bombketch
+            ));
+
+            presets.Add(new Preset(
+                ShipsHandler.Ships.Carrack,
+                ShipsHandler.Ships.Cruiser,
+                ShipsHandler.Ships.Carrack,
+                ShipsHandler.Ships.Carrack,
+                ShipsHandler.Ships.Cruiser,
+                ShipsHandler.Ships.Carrack
+            ));
+        }
+
         private IEnumerator gameModeStart()
         {
             Log.log("Started [BoardingBloodbath] mode");
@@ -161,14 +220,17 @@ namespace BoardingBloodbath
             yield return new WaitForSeconds(20f);
             Log.log("Passed 20sec");
 
+            Preset preset = presets[nextPreset];
+            Debug.Log($"Using preset {nextPreset}");
+
             try
             {
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Hoy, 0);
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Galleon, 1);
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Hoy, 2);
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Hoy, 4);
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Galleon, 5);
-                ShipsHandler.spawnShip(ShipsHandler.Ships.Hoy, 6);
+                ShipsHandler.spawnShip(preset.navy.smallShip1, 0);
+                ShipsHandler.spawnShip(preset.navy.bigShip, 1);
+                ShipsHandler.spawnShip(preset.navy.smallShip1, 2);
+                ShipsHandler.spawnShip(preset.pirate.smallShip2, 4);
+                ShipsHandler.spawnShip(preset.pirate.bigShip, 5);
+                ShipsHandler.spawnShip(preset.pirate.smallShip2, 6);
             }
             catch(Exception e)
             {
@@ -252,14 +314,21 @@ namespace BoardingBloodbath
             yield return new WaitForSeconds(0.1f);
             for (;;)
             {
-                for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
+                if (started)
                 {
-                    if (__instance.êóæìíîìñäîí[i])
+                    for (int i = 0; i < __instance.êóæìíîìñäîí.Length; i++)
                     {
-                        __instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+                        if (__instance.êóæìíîìñäîí[i])
+                        {
+                            __instance.êóæìíîìñäîí[i].GetComponent<BotPlayer>().åñîïòíæêêåî.îëæêéïåðæìå("Unload", óëððîêðëóêó.îéäåéçèïïñí, new object[0]);
+                        }
                     }
+                    yield return new WaitForSeconds(5f);
                 }
-                yield return new WaitForSeconds(5f);
+                else
+                {
+                    yield return new WaitForSeconds(20f);
+                }
             }
         }
     }

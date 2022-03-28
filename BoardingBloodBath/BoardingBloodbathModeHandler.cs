@@ -12,28 +12,34 @@ namespace BoardingBloodbath
         public static List<string> usersVoted = new List<string>();
         public static bool voteSucceded = false;
 
-        public static void vote(string pName, int pSocket, bool isForced)
+        public static void forceVote(string pName, int pSocket, bool setType, int type = 0)
         {
-            if (usersVoted.Contains(pName))
+            if (voteSucceded || (setType && BoardingBloodbathGameMode.Instance.nextPreset == type))
             {
-                // To User only
-                if (isForced && voteSucceded)
+                BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                 {
-                    BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
-                    {
                         1,
                         1,
                         "game",
                         "The gamemode has already won the vote!"
-                    });
-                }
-                else if (isForced)
+                });
+            }
+            else if (setType) {
+                if (type <= BoardingBloodbathGameMode.Instance.presets.Count - 1)
                 {
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
                         "all",
                         "Switching to Boarding Bloodbath mode next round..."
                     });
+                    BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                    {
+                        1,
+                        1,
+                        "game",
+                        $"Setting to preset {type}"
+                    });
+                    BoardingBloodbathGameMode.Instance.nextPreset = type;
                     voteSucceded = true;
                 }
                 else
@@ -41,11 +47,35 @@ namespace BoardingBloodbath
                     BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
                     {
                         1,
-                        1, 
+                        1,
                         "game",
-                        "You have already voted!"
-                    });
+                        $"Please enter a value from 0 to {BoardingBloodbathGameMode.Instance.presets.Count - 1}"
+                    }); ;
                 }
+            }
+            else
+            {
+                UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
+                {
+                        "all",
+                        "Switching to Boarding Bloodbath mode next round..."
+                });
+                voteSucceded = true;
+                BoardingBloodbathGameMode.selectNextPreset();
+            }
+        }
+
+        public static void vote(string pName, int pSocket)
+        {
+            if (usersVoted.Contains(pName))
+            {
+                BoardingBloodbathGameMode.Instance.wno.òäóæåòîððòä("broadcastChat", pSocket, new object[]
+                {
+                        1,
+                        1,
+                        "game",
+                        "You have already Voted!"
+                });
             }
             else
             {
@@ -57,7 +87,7 @@ namespace BoardingBloodbath
                     1,
                     1,
                     "game",
-                    "Your vote has been counted."
+                    "Your Vote has been counted."
                 });
 
                 // To all users
@@ -73,11 +103,11 @@ namespace BoardingBloodbath
                         "/",
                         Math.Ceiling(GameMode.Instance.Players.Count / 2.0).ToString(),
                         ")",
-                        " using '!vote' in chat!"
+                        " using '!Vote BB' in chat!"
                     })
                 });
 
-                if ((usersVoted.Count >= Math.Ceiling(GameMode.Instance.Players.Count / 2.0) || isForced) && !voteSucceded)
+                if (usersVoted.Count >= Math.Ceiling(GameMode.Instance.Players.Count / 2.0) && !voteSucceded)
                 {
                     UI.Instance.GetComponent<WakeNetObject>().îëæêéïåðæìå("sendWarning", óëððîêðëóêó.îéäåéçèïïñí, new object[]
                     {
@@ -85,6 +115,7 @@ namespace BoardingBloodbath
                         "Switching to Boarding Bloodbath mode next round..."
                     });
                     voteSucceded = true;
+                    BoardingBloodbathGameMode.selectNextPreset();
                 }
             }
         }
